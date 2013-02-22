@@ -16,8 +16,7 @@ The MyHeadHub module for Emoncms will be middleware for two systems to synchroni
 - modify script shl/rpic and set variables RPI_BIN and RPI_SCRIPT according to your Emoncms installation
 - sudo cp shl/rpic /etc/init.d/
 - sudo update-rc.d rpic defaults
-- sudo service rpic start
-Service will be started and log file will be available at /var/log/rpic.log
+- sudo service rpic start (Service will be started and log file will be available at /var/log/rpic.log)
 
 ###To enable daemon monitoring:
 - sudo apt-get install monit
