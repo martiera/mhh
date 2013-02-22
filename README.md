@@ -1,9 +1,9 @@
 #MyHeatHub emoncms module
 
-The MyHeadHub module for Emoncms will be middleware for two systems to synchronize data. With that possibility Emoncms can be used to monitor and control heating.
+The MyHeatHub module for Emoncms will be middleware for two systems to synchronize data. With that possibility Emoncms can be used to monitor and control heating.
 
 ##Features:
-- possibility to send data from emoncms to myheadhub (optional)
+- possibility to send data from emoncms to myheathub (optional)
 - makes raspberrypi_run.php to run as daemon
 - enables monitoring for critical damens
 
