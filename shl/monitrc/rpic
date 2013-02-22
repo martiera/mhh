@@ -1,6 +1,6 @@
 check process rpic with pidfile /run/rpic.pid
   start program = "/etc/init.d/rpic start"
   stop program  = "/etc/init.d/rpic stop"
-  if cpu > 80% for 5 cycles then restart
-  if totalmem > 200.0 MB for 5 cycles then restart
+  if cpu > 50% for 5 cycles then restart
+  if totalmem > 50.0 MB for 5 cycles then restart
   if 5 restarts within 5 cycles then timeout
