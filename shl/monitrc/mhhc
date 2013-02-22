@@ -1,0 +1,4 @@
+check process mhhc with pidfile /run/mhhc.pid
+  start program = "/etc/init.d/mhhc start"
+  stop program  = "/etc/init.d/mhhc stop"
+  if 5 restarts within 5 cycles then timeout
