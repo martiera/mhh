@@ -4,3 +4,6 @@ check process rpic with pidfile /run/rpic.pid
   if cpu > 50% for 5 cycles then restart
   if totalmem > 50.0 MB for 5 cycles then restart
   if 5 restarts within 5 cycles then timeout
+check file rpic.log with path /var/log/rpic.log
+   if timestamp > 10 minutes
+      then exec "/usr/bin/restartavr"
