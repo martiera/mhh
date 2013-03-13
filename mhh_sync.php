@@ -42,6 +42,7 @@
   while($row = db_fetch_array($result))
   {
 
+/*
     $feedid = null;
     $input_processlist =  trim($row['processList']);
     if ($input_processlist)
@@ -53,13 +54,16 @@
         $processid = $inputprocess[0];                                          // Process id
         $arg = $inputprocess[1];                                                // Can be value or feed id
 
-        if ($processid = "1")
+        if ($processid == "1")
         {
           $feedid = $arg;
+          break;
         }
 
       }
     }
+*/
+    $feedid = $node_row['feedid'];
 
     $feedname = "feed_".trim($feedid);
     if (isset($node_row['lastsync']))
@@ -69,17 +73,21 @@
       { $lastvalue = trim($node_row['lastvalue']); } 
     else { $lastvalue = -255; }
 
-    $feed_result = db_query("SELECT time, round(data,1) data FROM $feedname WHERE time>$lastsync ORDER BY time asc");
+    $filter = $node_row['filter'];
+    if ($filter)
+      { $feed_result = db_query("SELECT time, round(data,$filter) data FROM $feedname WHERE time>$lastsync ORDER BY time asc"); }
+    else
+      { $feed_result = db_query("SELECT time, data FROM $feedname WHERE time>$lastsync ORDER BY time asc"); }
 
     $i = 0;
     while ($feed_row = db_fetch_array($feed_result))
     { 
       $lastsync=$feed_row['time'];
       $i = 1;
-      if ($feed_row['data'] != $lastvalue)
+      if ($feed_row['data'] != $lastvalue || !$filter)
       {
         $i = 0;
-        $curl_result = do_post_request("http://myheathub.com/api/feeds", '{"id": "'.$feedid.'", "date": "'.$feed_row['time'].'", "temp": "'.$feed_row['data'].'"}', 'X-apikey: '.$apikey);
+        $curl_result = do_post_request("http://myheathub.com/api/feeds", '{"id": "'.$node_row['nodeid'].'", "date": "'.$feed_row['time'].'", "temp": "'.$feed_row['data'].'"}', 'X-apikey: '.$apikey);
         if ($curl_result === "ok")
         {
           $lastvalue = trim($feed_row['data']);

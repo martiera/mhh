@@ -57,6 +57,7 @@ function debug() {
 
 function do_start {
 	cd $(dirname $RPI_BIN)
+        sleep 7
 	$RPI_EXEC -f $RPI_BIN >> /var/log/rpic.log &
 	echo $! > $RPI_PID_FILE
 }

@@ -6,4 +6,4 @@ check process rpic with pidfile /run/rpic.pid
   if 5 restarts within 5 cycles then timeout
 check file rpic.log with path /var/log/rpic.log
    if timestamp > 10 minutes
-      then exec "/usr/bin/restartavr"
+      then exec "/usr/bin/sudo /usr/bin/restartavr"
