@@ -15,12 +15,12 @@
 
   // Connect to the database
   define('EMONCMS_EXEC', 1);
-  require "../../../settings.php";
-  require "../../../db.php";
+  require "/var/www/emoncms/settings.php";
+  require "/var/www/emoncms/db.php";
   db_connect();
 
   //Get apikey
-  $api_result = db_query("SELECT * FROM mhh_params where param='apikey'");
+  $api_result = db_query("SELECT * FROM mhh_params where name='apikey'");
   $api_row = db_fetch_array($api_result);
   $apikey = trim($api_row['value']);
 

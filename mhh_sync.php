@@ -31,7 +31,7 @@
   $node_result = db_query("SELECT * FROM mhh_nodes where sync>0  ORDER BY `nodeid` asc");
 
   //Get apikey
-  $api_result = db_query("SELECT * FROM mhh_params where param='apikey'");
+  $api_result = db_query("SELECT * FROM mhh_params where name='apikey'");
   $api_row = db_fetch_array($api_result);
   $apikey = trim($api_row['value']);
 
@@ -103,9 +103,10 @@
       db_query("UPDATE mhh_nodes SET lastsync=".$lastsync.", lastvalue=".$lastvalue." WHERE nodeid=".trim($node_row['nodeid']).";");
 //      echo "Transfer complete - $lastsync\n";
     }
-//    echo "End fo script\n";
   }
-  }
+  db_query("UPDATE mhh_params SET value=".date("U")." WHERE name='mhhexec';");  
+  delete_feed_history();
+}
 
 function do_post_request($url, $data, $optional_headers = null)
 {
@@ -128,6 +129,42 @@ function do_post_request($url, $data, $optional_headers = null)
   return $response;
 }
 
+function delete_feed_history()
+{
+  $time_now = time();
+  $time = mktime(0, 0, 0, date("m",$time_now), date("d",$time_now), date("Y",$time_now));
+
+  // Get last run
+  $result = db_query("SELECT value FROM mhh_params WHERE name='lastdel';");
+  $last_run = db_fetch_array($result);
+
+  if ($last_run)
+  {
+    $last_time = strtotime($last_run['value']);
+    if (!$last_time)
+      $last_time = $time - 1;
+    if ($last_time < $time)
+    {
+      $days_result = db_query("SELECT value FROM mhh_params WHERE name='keepdays';");
+      $days_row = db_fetch_array($days_result);
+      if ($days_row)
+      {
+        $keep_days = $days_row['value'];
+#        $feedid_result = db_query("SELECT id FROM feeds ORDER BY id;");
+        $feedid_result = db_query("SELECT f.id id FROM feeds f, mhh_nodes n WHERE f.id=n.feedid and n.lastsync>$time-$keep_days*86400;");
+
+        while ($feedid_row = db_fetch_array($feedid_result))
+        {
+          $feed_table = 'feed_'.$feedid_row['id'];
+          db_query("DELETE FROM $feed_table WHERE time < $time-$keep_days*86400;");
+        }
+      
+        db_query("UPDATE mhh_params set value='$time' WHERE name='lastdel';");
+      }
+    }
+  }
+
+  return 1;
+}
+
 ?>
-
-
